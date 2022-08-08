@@ -89,10 +89,10 @@ class WikiArtFetcher:
         except Exception as error:
             Logger.write('Error %s' % str(error))
 
-    def fetch_all(self):
+    def fetch_all(self, max_paintings_per_artist):
         """Fetch Everything from WikiArt."""
         return (self.fetch_artists()
-                    .fetch_all_paintings()
+                    .fetch_all_paintings(max_paintings_per_artist)
                     .copy_everything())
 
     def fetch_artists(self):
@@ -129,7 +129,7 @@ class WikiArtFetcher:
 
         return self
 
-    def fetch_all_paintings(self, max_paintings_per_artist=10):
+    def fetch_all_paintings(self, max_paintings_per_artist):
         """Fetch Paintings Metadata for Every Artist"""
         Logger.write('\nFetching paintings for every artist:')
         if not self.artists:
@@ -146,7 +146,7 @@ class WikiArtFetcher:
                 Logger.info('%i%% done' % (100 * (i + 1) // len(self.artists)))
         return self
 
-    def fetch_paintings(self, artist, max_paintings_per_artist=10):
+    def fetch_paintings(self, artist, max_paintings_per_artist):
         """Retrieve and Save Paintings Info from WikiArt.
 
         :param artist: dict, artist who should have their paintings retrieved.
