@@ -153,7 +153,7 @@ class WikiArtFetcher:
         """
         Logger.write('|- %s\'s paintings'
                      % artist['artistName'], end='', flush=True)
-        Logger.write(f'max_paintings_per_artist={max_paintings_per_artist}', end='', flush=True)
+        Logger.write(f'\n max_paintings_per_artist={max_paintings_per_artist}', end='', flush=True)
         elapsed = time.time()
 
         meta_folder = os.path.join(settings.BASE_FOLDER, 'meta')
