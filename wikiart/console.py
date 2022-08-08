@@ -26,7 +26,7 @@ class Console:
                        help='output directory for dataset')
         p.add_argument('--check', type=bool, default=True,
                        help='check downloaded files')
-        p.add_argument('--max_paintings_per_artist', type=int, default=True,
+        p.add_argument('--max_paintings_per_artist', type=int, default=10,
                        help='the max # of paintings to download per artist')
 
         # Fetch operation.
@@ -84,10 +84,10 @@ class Console:
             args.only = 'all'
             f.fetch_all(args.max_paintings_per_artist)
         else:
-            f.fetch_artists(args.max_paintings_per_artist)
+            f.fetch_artists()
 
             if args.only == 'paintings':
-                f.fetch_all_paintings()
+                f.fetch_all_paintings(args.max_paintings_per_artist)
 
         if args.check: f.check(only=args.only)
 
