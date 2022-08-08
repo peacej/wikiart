@@ -129,7 +129,7 @@ class WikiArtFetcher:
 
         return self
 
-    def fetch_all_paintings(self):
+    def fetch_all_paintings(self, max_paintings_per_artist=10):
         """Fetch Paintings Metadata for Every Artist"""
         Logger.write('\nFetching paintings for every artist:')
         if not self.artists:
@@ -140,19 +140,20 @@ class WikiArtFetcher:
 
         # Retrieve paintings' metadata for every artist.
         for i, artist in enumerate(self.artists):
-            self.painting_groups.append(self.fetch_paintings(artist))
+            self.painting_groups.append(self.fetch_paintings(artist, max_paintings_per_artist))
 
             if i % show_progress_at == 0:
                 Logger.info('%i%% done' % (100 * (i + 1) // len(self.artists)))
         return self
 
-    def fetch_paintings(self, artist):
+    def fetch_paintings(self, artist, max_paintings_per_artist=10):
         """Retrieve and Save Paintings Info from WikiArt.
 
         :param artist: dict, artist who should have their paintings retrieved.
         """
         Logger.write('|- %s\'s paintings'
                      % artist['artistName'], end='', flush=True)
+        Logger.write(f'max_paintings_per_artist={max_paintings_per_artist}', end='', flush=True)
         elapsed = time.time()
 
         meta_folder = os.path.join(settings.BASE_FOLDER, 'meta')
@@ -164,14 +165,14 @@ class WikiArtFetcher:
             with open(filename, 'r', encoding='utf-8') as f:
                 data = json.load(f)
             Logger.write(' (s)')
-            return data
+            return data[:max_paintings_per_artist]
 
         try:
             response = requests.get(
                 url, params=params,
                 timeout=settings.METADATA_REQUEST_TIMEOUT)
             response.raise_for_status()
-            data = response.json()
+            data = response.json()[:max_paintings_per_artist]
 
             for painting in data:
                 # We have some info about the images,
